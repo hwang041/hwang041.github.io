@@ -4,27 +4,37 @@ layout: compress
 
 <!doctype html>
 
+<!-- 包含源类型设置，可能用于设置网站的基础URL或其他起源相关配置 -->
 {% include origin-type.html %}
 
+<!-- 包含语言设置，用于确定网站的显示语言 -->
 {% include lang.html %}
 
+<!-- 根据站点主题模式设置data-mode属性，用于控制暗黑/明亮模式 -->
 {% if site.theme_mode %}
   {% capture prefer_mode %}data-mode="{{ site.theme_mode }}"{% endcapture %}
 {% endif %}
 
-<!-- `site.alt_lang` can specify a language different from the UI -->
+<!-- `site.alt_lang`可以指定与UI不同的语言 -->
 <html lang="{{ page.lang | default: site.alt_lang | default: site.lang }}" {{ prefer_mode }}>
+  <!-- 包含网站头部信息，如元标签、标题、样式表等 -->
   {% include head.html %}
 
   <body>
+    <!-- 包含侧边栏导航，传递当前语言参数 -->
     {% include sidebar.html lang=lang %}
 
+    <!-- 主内容包装器，使用flex布局并居中显示 -->
     <div id="main-wrapper" class="d-flex justify-content-center">
       <div class="container d-flex flex-column px-xxl-5">
+        <!-- 包含顶部导航栏，传递当前语言参数 -->
         {% include topbar.html lang=lang %}
 
+        <!-- 主内容和侧边面板的行布局 -->
         <div class="row flex-grow-1">
+          <!-- 主内容区域，根据屏幕尺寸调整宽度 -->
           <main aria-label="Main Content" class="col-12 col-lg-11 col-xl-9 px-md-4">
+            <!-- 根据布局类型决定如何处理内容 -->
             {% if layout.refactor or layout.layout == 'default' %}
               {% include refactor-content.html content=content lang=lang %}
             {% else %}
@@ -32,13 +42,16 @@ layout: compress
             {% endif %}
           </main>
 
-          <!-- panel -->
+          <!-- 右侧面板，包含更新列表和热门标签等辅助内容 -->
           <aside aria-label="Panel" id="panel-wrapper" class="col-xl-3 ps-2 mb-5 text-muted">
             <div class="access">
+              <!-- 包含更新列表，使用缓存以提高性能 -->
               {% include_cached update-list.html lang=lang %}
+              <!-- 包含热门标签，使用缓存以提高性能 -->
               {% include_cached trending-tags.html lang=lang %}
             </div>
 
+            <!-- 动态包含layout中定义的面板组件 -->
             {% for _include in layout.panel_includes %}
               {% assign _include_path = _include | append: '.html' %}
               {% include {{ _include_path }} lang=lang %}
@@ -46,21 +59,26 @@ layout: compress
           </aside>
         </div>
 
+        <!-- 页面底部区域 -->
         <div class="row">
-          <!-- tail -->
+          <!-- 尾部包装器 -->
           <div id="tail-wrapper" class="col-12 col-lg-11 col-xl-9 px-md-4">
+            <!-- 动态包含layout中定义的尾部组件 -->
             {% for _include in layout.tail_includes %}
               {% assign _include_path = _include | append: '.html' %}
               {% include {{ _include_path }} lang=lang %}
             {% endfor %}
 
+            <!-- 包含页脚信息，使用缓存以提高性能 -->
             {% include_cached footer.html lang=lang %}
           </div>
         </div>
 
+        <!-- 包含搜索结果组件，使用缓存以提高性能 -->
         {% include_cached search-results.html lang=lang %}
       </div>
 
+      <!-- 滚动到顶部按钮 -->
       <aside aria-label="Scroll to Top">
         <button id="back-to-top" type="button" class="btn btn-lg btn-box-shadow">
           <i class="fas fa-angle-up"></i>
@@ -68,20 +86,25 @@ layout: compress
       </aside>
     </div>
 
+    <!-- 遮罩层，用于模态框或侧边栏等交互效果 -->
     <div id="mask"></div>
 
+    <!-- 如果启用了PWA，包含通知组件 -->
     {% if site.pwa.enabled %}
       {% include_cached notification.html lang=lang %}
     {% endif %}
 
-    <!-- JavaScripts -->
+    <!-- JavaScript部分 -->
 
+    <!-- 包含JavaScript选择器，根据需要加载不同的JS -->
     {% include js-selector.html lang=lang %}
 
+    <!-- 如果页面需要mermaid图表，包含mermaid支持 -->
     {% if page.mermaid %}
       {% include mermaid.html %}
     {% endif %}
 
+    <!-- 包含搜索加载器，使用缓存以提高性能 -->
     {% include_cached search-loader.html lang=lang %}
   </body>
 </html>

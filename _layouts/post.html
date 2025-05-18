@@ -9,23 +9,27 @@ tail_includes:
   - comments
 ---
 
+<!-- 包含语言设置 -->
 {% include lang.html %}
 
 <article class="px-1">
   <header>
+    <!-- 文章标题，data-toc-skip属性用于跳过目录生成 -->
     <h1 data-toc-skip>{{ page.title }}</h1>
+    
+    <!-- 文章描述（如果有） -->
     {% if page.description %}
       <p class="post-desc fw-light mb-4">{{ page.description }}</p>
     {% endif %}
 
     <div class="post-meta text-muted">
-      <!-- published date -->
+      <!-- 发布日期 -->
       <span>
         {{ site.data.locales[lang].post.posted }}
         {% include datetime.html date=page.date tooltip=true lang=lang %}
       </span>
 
-      <!-- lastmod date -->
+      <!-- 最后修改日期（如果与发布日期不同） -->
       {% if page.last_modified_at and page.last_modified_at != page.date %}
         <span>
           {{ site.data.locales[lang].post.updated }}
@@ -33,6 +37,7 @@ tail_includes:
         </span>
       {% endif %}
 
+      <!-- 文章预览图（如果有） -->
       {% if page.image %}
         {% capture src %}src="{{ page.image.path | default: page.image }}"{% endcapture %}
         {% capture class %}class="preview-img{% if page.image.no_bg %}{{ ' no-bg' }}{% endif %}"{% endcapture %}
@@ -51,7 +56,7 @@ tail_includes:
       {% endif %}
 
       <div class="d-flex justify-content-between">
-        <!-- author(s) -->
+        <!-- 文章作者 -->
         <span>
           {% if page.author %}
             {% assign authors = page.author %}
@@ -63,6 +68,7 @@ tail_includes:
 
           <em>
             {% if authors %}
+              <!-- 循环输出多位作者信息 -->
               {% for author in authors %}
                 {% if site.data.authors[author].url -%}
                   <a href="{{ site.data.authors[author].url }}">{{ site.data.authors[author].name }}</a>
@@ -72,13 +78,14 @@ tail_includes:
                 {% unless forloop.last %}{{ '</em>, <em>' }}{% endunless %}
               {% endfor %}
             {% else %}
+              <!-- 默认使用站点配置的社交链接中的第一个作为作者链接 -->
               <a href="{{ site.social.links[0] }}">{{ site.social.name }}</a>
             {% endif %}
           </em>
         </span>
 
         <div>
-          <!-- pageviews -->
+          <!-- 页面浏览量统计（如果启用了相关服务） -->
           {% if site.pageviews.provider and site.analytics[site.pageviews.provider].id %}
             <span>
               <em id="pageviews">
@@ -88,19 +95,20 @@ tail_includes:
             </span>
           {% endif %}
 
-          <!-- read time -->
+          <!-- 阅读时间估算 -->
           {% include read-time.html content=content prompt=true lang=lang %}
         </div>
       </div>
     </div>
   </header>
 
+  <!-- 文章主体内容 -->
   <div class="content">
     {{ content }}
   </div>
 
   <div class="post-tail-wrapper text-muted">
-    <!-- categories -->
+    <!-- 文章分类（如果有） -->
     {% if page.categories.size > 0 %}
       <div class="post-meta mb-3">
         <i class="far fa-folder-open fa-fw me-1"></i>
@@ -111,7 +119,7 @@ tail_includes:
       </div>
     {% endif %}
 
-    <!-- tags -->
+    <!-- 文章标签（如果有） -->
     {% if page.tags.size > 0 %}
       <div class="post-tags">
         <i class="fa fa-tags fa-fw me-1"></i>
@@ -132,6 +140,7 @@ tail_includes:
         d-flex justify-content-between align-items-center mt-5 pb-2
       "
     >
+      <!-- 文章版权信息 -->
       <div class="license-wrapper">
         {% if site.data.locales[lang].copyright.license.template %}
           {% capture _replacement %}
@@ -144,6 +153,7 @@ tail_includes:
         {% endif %}
       </div>
 
+      <!-- 文章分享功能 -->
       {% include post-sharing.html lang=lang %}
     </div>
     <!-- .post-tail-bottom -->
