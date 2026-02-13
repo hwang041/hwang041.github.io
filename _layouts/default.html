@@ -45,17 +45,12 @@ layout: compress
           <!-- 右侧面板，包含更新列表和热门标签等辅助内容 -->
           <aside aria-label="Panel" id="panel-wrapper" class="col-xl-3 ps-2 mb-5 text-muted">
             <div class="access">
-              <!-- 包含更新列表，使用缓存以提高性能 -->
-              {% include_cached update-list.html lang=lang %}
-              <!-- 包含热门标签，使用缓存以提高性能 -->
-              {% include_cached trending-tags.html lang=lang %}
+              <!-- 动态包含layout中定义的面板组件 -->
+              {% for _include in layout.panel_includes %}
+                {% assign _include_path = _include | append: '.html' %}
+                {% include {{ _include_path }} lang=lang %}
+              {% endfor %}
             </div>
-
-            <!-- 动态包含layout中定义的面板组件 -->
-            {% for _include in layout.panel_includes %}
-              {% assign _include_path = _include | append: '.html' %}
-              {% include {{ _include_path }} lang=lang %}
-            {% endfor %}
           </aside>
         </div>
 
